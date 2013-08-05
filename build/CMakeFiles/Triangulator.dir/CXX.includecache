@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/data.h
+geometry.h
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
+
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
+vector
+-
+string
+-
+
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.cpp
+iostream
+-
+assert.h
+-
+test.h
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.h
+geometry.h
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
+data.h
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/data.h
+
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.h
+

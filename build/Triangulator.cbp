@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="Triangulator" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="Triangulator">
+         <Option output="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Triangulator" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.7" />
+            <Add directory="/usr/include/c++/4.7/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.7/." />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.7/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.7/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 Triangulator" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="Triangulator/fast">
+         <Option output="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Triangulator" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.7" />
+            <Add directory="/usr/include/c++/4.7/backward" />
+            <Add directory="/usr/include/i386-linux-gnu" />
+            <Add directory="/usr/include/i386-linux-gnu/c++/4.7/." />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.7/include" />
+            <Add directory="/usr/lib/gcc/i686-linux-gnu/4.7/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 Triangulator/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/data.cpp">
+      </Unit>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.cpp">
+      </Unit>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/main.cpp">
+      </Unit>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.cpp">
+      </Unit>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/data.h">
+      </Unit>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h">
+      </Unit>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.h">
+      </Unit>
+      <Unit filename="/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>
