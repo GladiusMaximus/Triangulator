@@ -1,11 +1,11 @@
-#ifndef TEST_H
-#define TEST_H
+#ifndef TEST_H_
+#define TEST_H_
 
 void test_all();
-void test_point_eq();
-void test_circle_eq();
-void test_rectangle_eq();
-void test_bilateral();
-void test_inside();
+void testPoint_eq();
+void testCircleEquals();
+void testRectangleEquals();
+void testBilateral();
+void testInside();
 
-#endif // TEST_H
+#endif // TEST_H_

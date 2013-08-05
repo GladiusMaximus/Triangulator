@@ -1,47 +1,47 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#ifndef GEOMETRY_H_
+#define GEOMETRY_H_
 
 // Includes
 #include <vector>
 #include <string>
 
 // Data types
-typedef double number;
-// number may change to float or something else.
+typedef double Number;
+// Number may change to float or something else.
 
 typedef struct {
-	number x, y;
-} point;
+    Number x, y;
+} Point;
 
 typedef struct {
-	point center;
-	number radius;
-} circle;
+    Point center;
+    Number radius;
+} Circle;
 
 typedef struct {
-	point bottomleft, topright;
+    Point bottomleft, topright;
 } rectangle;
 
 // Methods
-number distance(const point &a, const point &b);
-bool inside(const rectangle &a, const point &b);
-std::vector<point> bilateral(circle const &a, circle const &b);
-std::string pointToString(point const &p);
-std::string circleToString(circle const &c);
-point average(std::vector<point> list);
+Number distance(const Point &a, const Point &b);
+bool inside(const rectangle &a, const Point &b);
+std::vector<Point> bilateral(Circle const &a, Circle const &b);
+std::string pointToString(Point const &p);
+std::string circleToString(Circle const &c);
+Point average(std::vector<Point> list);
 
 // Inlines
-inline number sqr(number a);
-inline number delta(number a, number b);
-inline bool almostEqual(number a, number b);
-inline point between(point a, point b);
+inline Number sqr(Number a);
+inline Number delta(Number a, Number b);
+inline bool almostEqual(Number a, Number b);
+inline Point between(Point a, Point b);
 
 // Operators
-bool operator==(const point& lhs, const point& rhs);
-bool operator==(const circle& lhs, const circle& rhs);
+bool operator==(const Point& lhs, const Point& rhs);
+bool operator==(const Circle& lhs, const Circle& rhs);
 bool operator==(const rectangle& lhs, const rectangle& rhs);
-bool operator!=(const point& lhs, const point& rhs);
-bool operator!=(const circle& lhs, const circle& rhs);
+bool operator!=(const Point& lhs, const Point& rhs);
+bool operator!=(const Circle& lhs, const Circle& rhs);
 bool operator!=(const rectangle& lhs, const rectangle& rhs);
 
-#endif // GEOMETRY_H
+#endif // GEOMETRY_H_

@@ -10,6 +10,14 @@
 geometry.h
 /home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
 
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.cpp
+math.h
+-
+sstream
+-
+geometry.h
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
+
 /home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
 vector
 -
