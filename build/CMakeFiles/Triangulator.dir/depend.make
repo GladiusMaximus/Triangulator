@@ -8,6 +8,7 @@ CMakeFiles/Triangulator.dir/data.cpp.o: ../geometry.h
 CMakeFiles/Triangulator.dir/geometry.cpp.o: ../geometry.cpp
 CMakeFiles/Triangulator.dir/geometry.cpp.o: ../geometry.h
 
+CMakeFiles/Triangulator.dir/main.cpp.o: ../geometry.h
 CMakeFiles/Triangulator.dir/main.cpp.o: ../main.cpp
 CMakeFiles/Triangulator.dir/main.cpp.o: ../test.h
 

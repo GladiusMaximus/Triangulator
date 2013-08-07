@@ -1,7 +1,73 @@
+/******************************************************************************
+  Includes
+******************************************************************************/
+
 #include <math.h>
 #include <sstream>
 #include "geometry.h"
-const Number ERROR_MARGIN  = .01;
+
+/******************************************************************************
+  Geometric funcions
+******************************************************************************/
+
+Number distance(Point const &a,  const Point &b) {
+  // d = sqrt(dx^2 + dy^2)
+  return hypot(a.x - b.x, a.y - b.y);
+}
+
+Point average(std::vector<Point> list) {
+  Number sumX, sumY;
+  for (std::vector<Point>::iterator it = list.begin(); it != list.end(); ++it)
+    sumX += it->x, sumY += it-> y;
+  return {sumX / list.size(), sumY / list.size()};
+}
+
+Point transform(const Point &origin, const Point &direction) {
+  return {origin.x + direction.x, origin.y + direction.y};
+}
+
+Rectangle transform(const Rectangle &origin, const Point &direction1,
+                    const Point &direction2) {
+  return {transform(origin.bottomleft, direction1),
+          transform(origin.topright, direction2)};
+}
+
+Rectangle square(Number a, Number b) {
+  return {square(a), square(b)};
+}
+
+Point square(Number a) {
+  return {a, a};
+}
+
+Point between(Point a, Point b) {
+  return {a.x + b.x / 2, a.y + b.y / 2};
+}
+
+bool inside(const Rectangle & a, const Point & b) {
+  return a.bottomleft.x <= b.x && b.x < a.topright.x &&
+      a.bottomleft.y <= b.y && b.y < a.topright.y;
+}
+
+/******************************************************************************
+  Arithmetic functoins
+******************************************************************************/
+
+Number sqr(Number a) {
+  return a * a;
+}
+
+Number delta(Number a, Number b) {
+  return fabs(a - b);
+}
+
+bool almostEqual(Number a, Number b) {
+  return delta(a, b) < ERROR_MARGIN;
+}
+
+/******************************************************************************
+  Stringy functions
+******************************************************************************/
 
 std::string pointToString(Point const &p) {
   std::ostringstream ss;
@@ -16,63 +82,16 @@ std::string circleToString(Circle const &c) {
   return ss.str();
 }
 
-inline bool almostEqual(Number a, Number b) {
-  return delta(a, b) < ERROR_MARGIN;
+std::string rectangleToString(Rectangle const &r) {
+  std::ostringstream ss;
+  ss << "bottomright: " << pointToString(r.bottomleft) << ", "
+     << "topleft: " << pointToString(r.topright);
+  return ss.str();
 }
 
-inline Number sqr(Number a) {
-  return a * a;
-}
-
-inline Number delta(Number a, Number b) {
-  return fabs(a - b);
-}
-
-bool inside(const rectangle & a, const Point & b) {
-  return a.bottomleft.x <= b.x && b.x < a.topright.x &&
-      a.bottomleft.y <= b.y && b.y < a.topright.y;
-}
-
-inline Point between(Point a, Point b) {
-  return {a.x + b.x / 2, a.y + b.y / 2};
-}
-
-Point average(std::vector<Point> list) {
-  Number sumX, sumY;
-  for (std::vector<Point>::iterator it = list.begin(); it != list.end(); ++it)
-    sumX += it->x, sumY += it-> y;
-  return {sumX / list.size(), sumY / list.size()};
-}
-
-Number distance(Point const &a,  const Point &b) {
-  // d = sqrt(dx^2 + dy^2)
-  return hypot(a.x - b.x, a.y - b.y);
-  //return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
-}
-
-bool operator==(const Point& lhs, const Point& rhs) {
-  return (almostEqual(lhs.x, rhs.x) && almostEqual(lhs.y, rhs.y));
-}
-
-bool operator==(const Circle& lhs, const Circle& rhs) {
-  return (lhs.center == rhs.center && almostEqual(lhs.radius, rhs.radius));
-}
-
-bool operator==(const rectangle& lhs, const rectangle& rhs) {
-  return (lhs.bottomleft == rhs.bottomleft && lhs.topright == rhs.topright);
-}
-
-bool operator!=(const Point& lhs, const Point& rhs) {
-  return ! (lhs == rhs);
-}
-
-bool operator!=(const Circle& lhs, const Circle& rhs) {
-  return ! (lhs == rhs);
-}
-
-bool operator!=(const rectangle& lhs, const rectangle& rhs) {
-  return ! (lhs == rhs);
-}
+/******************************************************************************
+  The bug cheese function
+******************************************************************************/
 
 std::vector<Point> bilateral(Circle const &a, Circle const &b) {
   // Credit to: http://paulbourke.net/geometry/circlesphere/
@@ -88,7 +107,7 @@ std::vector<Point> bilateral(Circle const &a, Circle const &b) {
   // Determine the straight-line distance between the centers.
   d = hypot(dx,dy); // Suggested by Keith Briggs
 
-  if (d == 0)
+  if (d < ERROR_MARGIN)
 
     // Check for solvability.
     if (d >= (a.radius + b.radius)) {
@@ -100,12 +119,11 @@ std::vector<Point> bilateral(Circle const &a, Circle const &b) {
       // af is the farthest Point reached by Circle a toward Circle b
       // df is the farthest Point reached by Circle b toward Circle a
       Point af = {aratio * dx, aratio * dy}, bf = {bratio * dx, bratio * dy},
-          avg = between(af, bf);
+            avg = between(af, bf);
 
 
       //return list
       std::vector<Point> ret;
-      ret.push_back(avg);
       ret.push_back(avg);
       return ret;
     }
@@ -121,14 +139,24 @@ std::vector<Point> bilateral(Circle const &a, Circle const &b) {
   // centers.
 
   // Determine the distance from Point 0 to Point 2.
-  ah = (sqr(a.radius) - sqr(b.radius) + (d*d)) / (2.0 * d) ;
+  ah = (sqr(a.radius) - sqr(b.radius) + sqr(d)) / (2.0 * d) ;
 
   // Determine the relative coordinates of Point 2.
   x2 = a.center.x + (dx * ah/d);
   y2 = a.center.y + (dy * ah/d);
 
   // Determine the distance from Point 2 to any intersection Point.
-  h = sqrt(sqr(a.radius) - (ah*ah));
+  h = sqrt(sqr(a.radius) - sqr(ah));
+
+  if (h < ERROR_MARGIN) {
+    // only one point solution
+    Point solution = {x2, y2};
+
+    // construct a return vector
+    std::vector<Point> ret;
+    ret.push_back(solution);
+    return ret;
+  }
 
   // Now determine the offsets of the intersection points from Point 2.
   rx = -dy * (h/d);
@@ -136,7 +164,7 @@ std::vector<Point> bilateral(Circle const &a, Circle const &b) {
 
   // Determine the absolute intersection points.
   Point solution1 = {x2 + rx, y2 + ry},
-      solution2 = {x2 - rx, y2 - ry};
+        solution2 = {x2 - rx, y2 - ry};
 
   // Return list of solutions as a vector
   std::vector<Point> ret;
@@ -146,4 +174,30 @@ std::vector<Point> bilateral(Circle const &a, Circle const &b) {
 
 }
 
+/******************************************************************************
+  Operators
+******************************************************************************/
 
+bool operator==(const Point& lhs, const Point& rhs) {
+  return (almostEqual(lhs.x, rhs.x) && almostEqual(lhs.y, rhs.y));
+}
+
+bool operator==(const Circle& lhs, const Circle& rhs) {
+  return (lhs.center == rhs.center && almostEqual(lhs.radius, rhs.radius));
+}
+
+bool operator==(const Rectangle& lhs, const Rectangle& rhs) {
+  return (lhs.bottomleft == rhs.bottomleft && lhs.topright == rhs.topright);
+}
+
+bool operator!=(const Point& lhs, const Point& rhs) {
+  return ! (lhs == rhs);
+}
+
+bool operator!=(const Circle& lhs, const Circle& rhs) {
+  return ! (lhs == rhs);
+}
+
+bool operator!=(const Rectangle& lhs, const Rectangle& rhs) {
+  return ! (lhs == rhs);
+}

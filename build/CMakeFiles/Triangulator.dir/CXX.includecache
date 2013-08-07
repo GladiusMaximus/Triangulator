@@ -6,35 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/data.h
-geometry.h
-/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
-
-/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.cpp
-math.h
--
-sstream
--
-geometry.h
-/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
-
 /home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
 vector
 -
 string
 -
 
-/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.cpp
-iostream
--
-assert.h
--
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/main.cpp
 test.h
+/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.h
+
 /home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.h
 geometry.h
 /home/sam/Dropbox/dev/eclipse_workspace/Triangulator/geometry.h
-data.h
-/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/data.h
-
-/home/sam/Dropbox/dev/eclipse_workspace/Triangulator/test.h
 

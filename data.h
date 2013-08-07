@@ -3,8 +3,17 @@
 
 #include "geometry.h"
 
-Circle random_circle();
-Point random_point();
-rectangle random_rectangle();
+// Functions
+Circle randomCircle();
+Rectangle randomRectangle();
+Point randomPoint();
+Point randomPoint(Number low, Number high);
+Point randomPoint(const Rectangle &boundary);
+Number randInt(Number min, Number max);
+
+// Constants
+const int MAX_POINT = 100; // largest value for any point or radius
+const int MIN_DIMENSION = 5; // smallest length for any dimension
+
 
 #endif // DATA_H_
