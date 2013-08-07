@@ -16,7 +16,7 @@ Number distance(Point const &a,  const Point &b) {
 }
 
 Point average(std::vector<Point> list) {
-  Number sumX, sumY;
+  Number sumX = 0.0, sumY = 0.0;
   for (std::vector<Point>::iterator it = list.begin(); it != list.end(); ++it)
     sumX += it->x, sumY += it-> y;
   return {sumX / list.size(), sumY / list.size()};

@@ -5,9 +5,8 @@
 //#define NDEBUG
 #include <assert.h>
 #include "test.h"
-#include "geometry.h"
 #include "data.h"
-//#define BILATERAL
+#define BILATERAL
 
 /******************************************************************************
   Constants
@@ -104,15 +103,6 @@ void testBilateral() {
 #endif
 }
 
-void showBilateral(Circle a, Circle b) {
-  std::vector<Point> solutions =
-      bilateral(a, b);
-  for (std::vector<Point>::iterator it = solutions.begin();
-       it != solutions.end(); ++it)
-  std::cout << pointToString(*it)
-            << std::endl;
-}
-
 void testInside() {
   Rectangle asquare;
   asquare.bottomleft = randomPoint();
@@ -129,3 +119,13 @@ void testInside() {
   assert(! inside(asquare, e));
 
 }
+
+void showBilateral(Circle a, Circle b) {
+  std::vector<Point> solutions =
+      bilateral(a, b);
+  for (std::vector<Point>::iterator it = solutions.begin();
+       it != solutions.end(); ++it)
+  std::cout << pointToString(*it)
+            << std::endl;
+}
+

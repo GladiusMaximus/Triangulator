@@ -2,7 +2,6 @@
   Includes
 ******************************************************************************/
 #include <stdlib.h>
-#include <random>
 #include "data.h"
 #include "geometry.h"
 
@@ -34,12 +33,23 @@ Point randomPoint(const Rectangle &boundary) {
           randInt(boundary.bottomleft.y, boundary.topright.y)};
 }
 
-//Number randInt(Number min, Number max) {
-//  static std::default_random_engine generator;
-//  std::uniform_int_distribution<int> distribution (int(min), int(max));
-//  return Number(generator(distribution)) + min;
-//}
+/* Number randInt(Number min, Number max) {
+  static std::default_random_engine generator;
+  std::uniform_int_distribution<int> distribution (int(min), int(max));
+  return Number(generator(distribution)) + min;
+}
+
+Number randInt(Number min, Number max, int seed) {
+  static std::default_random_engine generator (seed);
+  std::uniform_int_distribution<int> distribution (int(min), int(max));
+  return Number(generator(distribution)) + min;
+} */
 
 Number randInt(Number min, Number max) {
+  return Number(rand() % int(max - min)) + min;
+}
+
+Number randInt(Number min, Number max, int seed) {
+  srand(seed);
   return Number(rand() % int(max - min)) + min;
 }
