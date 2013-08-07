@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/Triangulator.dir/test.cpp.o CMakeFiles/Triangulator.dir/data.cpp.o CMakeFiles/Triangulator.dir/geometry.cpp.o CMakeFiles/Triangulator.dir/main.cpp.o  -o Triangulator -rdynamic 
