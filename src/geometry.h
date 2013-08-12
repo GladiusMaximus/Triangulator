@@ -30,7 +30,6 @@
 
 // Functions
   // Geometric functions
-    int factorial(int a);
     Point average(std::vector<Point> list);
     Point transform(const Point &origin, const Point &direction);
     Rectangle transform(const Rectangle &origin, const Point &direction1,
@@ -46,9 +45,6 @@
     std::string pointToString(Point const &p);
     std::string circleToString(Circle const &c);
     std::string rectangleToString(Rectangle const &r);
-  // The big cheese function
-    std::vector<Point> bilateral(Circle const &a, Circle const &b,
-                                 bool blabber=false);
 
 
 // Operators

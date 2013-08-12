@@ -9,7 +9,7 @@ g++ $source $compile_flags $debug_flags -o $file
 
 if [ $? -eq 0 ]; then
     echo_heading "Build Done!"
-    if [ $gdb ]; then
+    if [ $gdb_exec -ne 0 ]; then
         gdb -ex "source ./scripts/stl.gdb" --args $file $args
     fi
     return 0

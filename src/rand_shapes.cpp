@@ -2,7 +2,7 @@
   Includes
 ******************************************************************************/
 #include <stdlib.h> // simple random (rand() function)
-#include "data.h"
+#include "rand_shapes.h"
 #include "geometry.h"
 
 /******************************************************************************

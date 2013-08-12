@@ -1,5 +1,5 @@
-#ifndef DATA_H_
-#define DATA_H_
+#ifndef RAND_SHAPES_H_
+#define RAND_SHAPES_H__
 
 // Includes
 #include "geometry.h"
@@ -17,4 +17,4 @@ Number randInt(Number min, Number max, int seed);
 const int MAX_POINT = 100; // largest value for any point or radius
 const int MIN_DIMENSION = 5; // smallest length for any dimension
 
-#endif // DATA_H_
+#endif // RAND_SHAPES_H_

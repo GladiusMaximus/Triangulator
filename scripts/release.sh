@@ -9,7 +9,7 @@ g++ $source $compile_flags $release_flags -o $file
 
 if [ $? -eq 0 ]; then
     echo_heading "Build Done!"
-    if [ $exec ]; then
+    if [ $release_exec -ne 0 ]; then
         printf "Executing program\n\n\n"
         ./build/release $args
         printf "Program terminated\n\n\n"

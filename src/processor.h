@@ -2,6 +2,7 @@
 #define PROCESSOR_H_
 
 // Includes
+#include <string>
 #include <vector>
 #include "geometry.h"
 

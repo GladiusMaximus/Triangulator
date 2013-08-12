@@ -1,11 +1,13 @@
-#include <iostream>
 /******************************************************************************
   Includes
 ******************************************************************************/
-//#define NDEBUG
 #include <assert.h>
+#include <iostream>
+#include "processor.h"
 #include "test.h"
-#include "data.h"
+#include "rand_shapes.h"
+#include "bilateral.h"
+#include "geometry.h"
 
 /******************************************************************************
   Constants
@@ -24,6 +26,7 @@ void testAll() {
   testRectangleEquals();
   testBilateral();
   testInside();
+  testDataSuite();
 }
 
 void testPointEquals() {
@@ -97,7 +100,7 @@ void testBilateral() {
         success = true;
     }
     if (! success) { // Debug on failure
-      std::cout << "Error: " << i << "th iteration failed!!" << std::endl;
+      std::cout << "Error: " << i << "th iteration failed!!" << "\n";
       std::cout << "Bounding box: " << temp << std::endl;
       std::cout << "Target: " << target << ", t1: " << t1 << ", t2: " << t2
                 << std::endl;
@@ -122,4 +125,22 @@ void testInside() {
   assert(! inside(asquare, d));
   assert(! inside(asquare, e));
 
+}
+
+void testDataSuite() {
+  const Number STDDEV = 1.0;
+  const size_t REPEATS = 4;
+  const Number SAMPLERATE = 0.1;
+  const Point TARGET = {13, 26};
+  const std::vector<Circle> RADARLOCATIONS = {{{0, 0},0},
+                                              {{60, 0}, 0},
+                                              {{0, 60}, 0},
+                                              {{60, 60}, 0}
+  };
+  DataSuite dt = makeDataSuite(TARGET, RADARLOCATIONS, REPEATS, SAMPLERATE, STDDEV);
+  std::cout << "Is dt data fine? " << (checkDataSuite(dt)) << "\n";
+
+  processData(dt);
+  // TODO: examine contents of processData
+  // Use the same set of data each time
 }
