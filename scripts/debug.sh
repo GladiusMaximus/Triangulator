@@ -5,12 +5,12 @@
 file="./build/debug"
 rm -f $file
 
-g++ $source $compile_flags $debug_flags -o $file $parse_output
+g++ $source $compile_flags $debug_flags -o $file
 
 if [ $? -eq 0 ]; then
     echo_heading "Build Done!"
     if [ $gdb ]; then
-        gdb $file -ex "source ./scripts/stl.gdb"
+        gdb -ex "source ./scripts/stl.gdb" --args $file $args
     fi
     return 0
 else

@@ -6,7 +6,6 @@
 #include <assert.h>
 #include "test.h"
 #include "data.h"
-#define BILATERAL
 
 /******************************************************************************
   Constants
@@ -19,7 +18,7 @@ const long int ITERATIONS = 1000000;
   Functions
 ******************************************************************************/
 
-void test_all() {
+void testAll() {
   testPointEquals();
   testCircleEquals();
   testRectangleEquals();
@@ -29,7 +28,7 @@ void test_all() {
 
 void testPointEquals() {
   for (long int i = 0; i < ITERATIONS; i++) {
-    Point a = randomPoint(), b = transform(a, square(1)), c = b;
+    Point a = randomPoint(), b = a + (-1), c = b;
     assert(a != b);
     assert(c == b);
     assert(c != a);
@@ -47,7 +46,7 @@ void testPointEquals() {
 void testCircleEquals() {
   for (int i = 0; i < ITERATIONS; i++) {
     Circle a = randomCircle(),
-        b = {transform(a.center, square(1)), a.radius + 1},
+        b = {a.center + 1, a.radius + 1},
         c = b;
     assert(a != b);
     assert(c == b);
@@ -66,8 +65,8 @@ void testCircleEquals() {
 void testRectangleEquals() {
   for (int i = 0; i < ITERATIONS; i++) {
     Rectangle a = randomRectangle(),
-        b = transform(a, square(1), square(1)),
-        c = b;
+              b = {a.bottomleft + 1, a.topright + 1},
+              c = b;
     assert(a != b);
     assert(c == b);
     assert(c != a);
@@ -83,14 +82,13 @@ void testRectangleEquals() {
 }
 
 void testBilateral() {
-#ifdef BILATERAL
   for (int i = 0; i < ITERATIONS; i++) {
     Rectangle temp = randomRectangle();
-    Point a = transform(temp.bottomleft, square(-MIN_DIMENSION)),
-          b = transform(temp.topright, square(-MIN_DIMENSION)),
+    Point a = temp.bottomleft + (-MIN_DIMENSION),
+          b = temp.topright + MIN_DIMENSION,
           target;
     target = randomPoint(temp);
-    Circle t1 = {a, distance(a, target)}, t2 = {b, distance(b, target)};
+    Circle t1 = {a, a - target}, t2 = {b, b - target};
     std::vector<Point> solutions = bilateral(t1, t2);
     bool success = false;
     for (std::vector<Point>::iterator it = solutions.begin();
@@ -98,20 +96,26 @@ void testBilateral() {
       if (*it == target)
         success = true;
     }
-    assert(success);
+    if (! success) { // Debug on failure
+      std::cout << "Error: " << i << "th iteration failed!!" << std::endl;
+      std::cout << "Bounding box: " << temp << std::endl;
+      std::cout << "Target: " << target << ", t1: " << t1 << ", t2: " << t2
+                << std::endl;
+      bilateral(t1, t2, true);  // prints out stuff
+      break;
+    }
   }
-#endif
 }
 
 void testInside() {
   Rectangle asquare;
   asquare.bottomleft = randomPoint();
-  asquare.topright = transform(asquare.bottomleft, square(2));
-  Point a = transform(asquare.bottomleft, square(1)),
-        b = transform(asquare.bottomleft, {9, 1}),
-        c = transform(asquare.bottomleft, {-9, 1}),
-        d = transform(asquare.bottomleft, {1, 9}),
-        e = transform(asquare.bottomleft, {1, -9});
+  asquare.topright = asquare.bottomleft + Point({2, 2});
+  Point a = asquare.bottomleft + Point({1, 1}),
+        b = asquare.bottomleft + Point({9, 1}),
+        c = asquare.bottomleft + Point({-9, 1}),
+        d = asquare.bottomleft + Point({1, 9}),
+        e = asquare.bottomleft + Point({1, -9});
   assert(inside(asquare, a));
   assert(! inside(asquare, b));
   assert(! inside(asquare, c));
@@ -119,13 +123,3 @@ void testInside() {
   assert(! inside(asquare, e));
 
 }
-
-void showBilateral(Circle a, Circle b) {
-  std::vector<Point> solutions =
-      bilateral(a, b);
-  for (std::vector<Point>::iterator it = solutions.begin();
-       it != solutions.end(); ++it)
-  std::cout << pointToString(*it)
-            << std::endl;
-}
-

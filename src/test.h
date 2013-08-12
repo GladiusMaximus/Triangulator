@@ -4,15 +4,12 @@
 // Includes
 #include "geometry.h"
 
-// Functions
-  // Tests
-    void test_all();
-    void testPointEquals();
-    void testCircleEquals();
-    void testRectangleEquals();
-    void testBilateral();
-    void testInside();
-  // Debugging
-    void showBilateral(Circle a, Circle b);
+// Test functions
+void testAll();
+void testPointEquals();
+void testCircleEquals();
+void testRectangleEquals();
+void testBilateral();
+void testInside();
 
 #endif // TEST_H_

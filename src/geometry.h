@@ -5,7 +5,8 @@
 #include <vector>
 #include <string>
 
-// Data types
+
+// Data types and constants
   typedef double Number;
   // Number may change to float or something else, with higher percision.
   // for today's implementation of Number,
@@ -25,15 +26,16 @@
       Point bottomleft, topright;
   } Rectangle;
 
+  Point const ORIGIN = {0, 0};
+
 // Functions
   // Geometric functions
-    Number distance(const Point &a, const Point &b);
+    int factorial(int a);
     Point average(std::vector<Point> list);
     Point transform(const Point &origin, const Point &direction);
     Rectangle transform(const Rectangle &origin, const Point &direction1,
                         const Point &direction2);
     Rectangle square(Number a, Number b);
-    Point square(Number a);
     Point between(Point a, Point b);
     bool inside(const Rectangle &a, const Point &b);
   // Arithmetic functions
@@ -45,11 +47,28 @@
     std::string circleToString(Circle const &c);
     std::string rectangleToString(Rectangle const &r);
   // The big cheese function
-    std::vector<Point> bilateral(Circle const &a, Circle const &b);
+    std::vector<Point> bilateral(Circle const &a, Circle const &b,
+                                 bool blabber=false);
 
-// Inlines
 
 // Operators
+  // Arithmetic Point operators
+    // Euclidean distance
+    Number operator-(const Point& a, const Point& b);
+    // Apply a slide transformation to origin along direction
+    Point operator+(const Point& origin, const Point& direction);
+    // Apply a slide transformation; add direction to each coordinate of the point
+    Point operator+(const Point& origin, const Number direction);
+    // Scale a point; Dialation
+    Point operator*(const Point& origin, const Number scale);
+    // Invert a point; You can think of this as reflection across the line y = x
+    Point operator-(const Point& a);
+  // Point comparison operators
+    // If rhs < lhs in both coordinates
+    bool operator<(const Point& rhs, const Point& lhs);
+    bool operator>(const Point& rhs, const Point& lhs);
+    bool operator<=(const Point& rhs, const Point& lhs);
+    bool operator>=(const Point& rhs, const Point& lhs);
   // Equals
     bool operator==(const Point& lhs, const Point& rhs);
     bool operator==(const Circle& lhs, const Circle& rhs);
@@ -58,5 +77,9 @@
     bool operator!=(const Point& lhs, const Point& rhs);
     bool operator!=(const Circle& lhs, const Circle& rhs);
     bool operator!=(const Rectangle& lhs, const Rectangle& rhs);
+  // Stream operators
+    std::ostream& operator<<(std::ostream &strm, const Point &a);
+    std::ostream& operator<<(std::ostream &strm, const Circle &a);
+    std::ostream& operator<<(std::ostream &strm, const Rectangle &a);
 
 #endif // GEOMETRY_H_
