@@ -1,6 +1,6 @@
 #!/bin/sh
 # drop into gdb after compiling a debug version
-gdb_exec=0
+gdb_exec=1
 # flags for debug version
 debug_flags="-g -O0"
 
@@ -14,6 +14,7 @@ release_flags="-O3"
 # flags for both debug and release follow
 compile_flags="-std=c++11 -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual"
 source="./src/*.cpp"
+run_dr="./resources"
 args=""
 
 

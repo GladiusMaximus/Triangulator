@@ -4,14 +4,15 @@
 // Includes
 #include <vector>
 #include <string>
+#include <cfloat>
 
 
 // Data types and constants
-  typedef double Number;
+  typedef long double Number;
   // Number may change to float or something else, with higher percision.
   // for today's implementation of Number,
   // this is the error margin you should use:
-  const Number ERROR_MARGIN  = .001;
+  const Number ERROR_MARGIN  = LDBL_EPSILON;
 
   typedef struct {
       Number x, y;

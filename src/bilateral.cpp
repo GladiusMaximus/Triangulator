@@ -14,7 +14,7 @@ std::vector<Point> bilateral(Circle const &c1, Circle const &c2,
   Point diff = c2.center + (-(c1.center));
   Number d = diff - ORIGIN;
   if (blabber) printf("(dx, dy): %s, "
-         "distance (as the crow flies): %f\n", pointToString(diff).c_str(), d);
+         "distance (as the crow flies): %Le\n", pointToString(diff).c_str(), d);
 
   if (d < ERROR_MARGIN) {
     if (blabber) printf("near zero d\n");
@@ -27,7 +27,7 @@ std::vector<Point> bilateral(Circle const &c1, Circle const &c2,
 
       if (blabber) printf("Ratio of (dx, dy, d) to the triangle made by the\n"
              "farthest point the circle reaches is\n"
-             "%f for a, and %f for b\n", aratio, bratio);
+             "%Le for a, and %Le for b\n", aratio, bratio);
 
       Point af = diff * aratio, bf = diff * bratio,
             avg = between(af, bf);
@@ -51,14 +51,14 @@ std::vector<Point> bilateral(Circle const &c1, Circle const &c2,
   }
 
   Number a = (sqr(c1.radius) - sqr(c2.radius) + sqr(d)) / (2.0 * d);
-  if (blabber) printf("Distance between Point 0 and Point 2 is: %f\n", a);
+  if (blabber) printf("Distance between Point 0 and Point 2 is: %Le\n", a);
 
   Point p = c1.center + (diff * (a/d));
   if (blabber) printf("The relative coordinates of Point 2: %s\n",
          pointToString(p).c_str());
 
   Number h = sqrt(sqr(c1.radius) - sqr(a));
-  if (blabber) printf("The distance from Point 2 to an intersection point: %f, calc: %f\n", h, sqr(c1.radius) - sqr(a));
+  if (blabber) printf("The distance from Point 2 to an intersection point: %Le, calc: %Le\n", h, sqr(c1.radius) - sqr(a));
 
   if (h < ERROR_MARGIN || isnan(h)) {
     if (blabber) printf("h is near zero, The circles intersect at only 1 point\n"
