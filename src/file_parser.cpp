@@ -5,6 +5,8 @@
   CSV iterator
 ******************************************************************************/
 
+#define POSITION_AND_TIME
+
 GetLines::GetLines(const std::string& fileName, std::string* output_, char delim_) {
   file.open(fileName.c_str());
   delim = delim_;
@@ -45,8 +47,10 @@ bool GetElements::hasNext() {
 void parseMRMData(const std::string& fileName) {
   FilterReading current, last; reset(current); reset(last);
   std::string rowText, colText;
+  long double firstTime = 0.0;
+  long double sum, tmpMagnitude;
   int line = 0, elem = 0;
-  int tmpIndex, tmpMagnitude, dataLength = 0;
+  int tmpIndex, dataLength = 0;
   for (GetLines row (fileName, &rowText); row.hasNext(); row.next()) {
     // Setup
     ++line;
@@ -58,10 +62,12 @@ void parseMRMData(const std::string& fileName) {
     // Begin parsing line
     if (isdigit(colText[0])) { // first element is always timestamp (if its a number)
       current.timestamp = std::stold(colText); col.next();
+      if (firstTime == 0.0)
+        firstTime = current.timestamp;
       if (colText == "MrmDetectionListInfo") { col.next();
         current.messageID = std::stoi(colText); col.next();
         dataLength = std::stoi(colText); col.next();
-        elem = 0;
+        elem = 0; sum = 0;
         while (col.hasNext()) { // Then the rest of the line is data
           if (elem >= dataLength) {
             std::cerr << "Too many datapoints on " << line << "\nExpecting: "
@@ -69,17 +75,26 @@ void parseMRMData(const std::string& fileName) {
             break;
           }
           tmpIndex = std::stoi(colText); col.next();
-          tmpMagnitude = std::stoi(colText); col.next();
+          tmpMagnitude = std::stof(colText) / 10000000.0; col.next();
 
           sum += tmpMagnitude;
           current.index += tmpIndex * tmpMagnitude;
           ++elem;
         }
         //if (elem != dataLength * 2) std::cerr << "not enough datapoints\n";
-        //std::cout << readingToString(current) << " found on line: " << line << "\n";
-        std::cout << current.timestamp - 1376510285.913 << " "
-                  << current.index / sum << " "
-                  << sum / 1000000 << "\n";
+        #ifdef HUMAN_READABLE
+          std::cout << readingToString(current) << " found on line: " << line << "\n";
+        #endif
+        #ifdef POSITION_AND_TIME
+          std::cout << current.timestamp - firstTime << " "
+                    << current.index / sum << " "
+                    << sum << "\n";
+        #endif
+        #ifdef DATA_CERTAINTY
+          std::cout << current.timestamp - firstTime << " "
+                    << sum << "\n";
+        #endif
+
       }
     }
   }

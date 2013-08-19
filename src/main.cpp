@@ -11,6 +11,7 @@ const std::string fileName = "./external/rlog_000.csv";
 int main() {
   parseMRMData(fileName);
 }
+// TODO: not enough data points
 // TODO: fscanf instead of csv iterators
 // TODO: Error handling in csv
 // TODO: sequential parsing instead of pattern matching
