@@ -1,6 +1,7 @@
 max_val takes the maximum detection in each row
 It puts each row's point at (timestamp, detIndex), with radius detMagnitude
 
-waverage takes a weighted average of each row
+waverage1 takes a weighted average of each row
 It puts each row's point at (timestamp, detIndex*detMagnitude / sumMagnitude) with radius sumMagnitude
+
 

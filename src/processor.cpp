@@ -109,10 +109,12 @@ void processData(DataSuite& d) {
             std::cerr << "Non-fatal error -- No solution for: " << set
                       << " from radar at " << originRadar->center << " to radar at "
                       << otherRadar->center << "\n";
+            result->allSolutions.push_back(ORIGIN);
           } else {
             std::cerr << "Non-fatal error -- More than one solution for: " << set
                       << " from radar at " << originRadar->center << " to radar at "
                       << otherRadar->center << "\n";
+            result->allSolutions.push_back(possibilites[0]);
           }
         }
       }

@@ -1,3 +1,4 @@
+#include <vector>
 #include <iostream>
 #include "file_parser.h"
 
@@ -5,7 +6,10 @@
   CSV iterator
 ******************************************************************************/
 
-#define POSITION_AND_TIME
+#define PYTHON_READABLE
+const int MAX_MAGNITUDE = 65535;
+const int ELEMENTS = 380; // just an estimate
+const int DATA_POINTS = 140; // just an estimate
 
 GetLines::GetLines(const std::string& fileName, std::string* output_, char delim_) {
   file.open(fileName.c_str());
@@ -44,59 +48,93 @@ bool GetElements::hasNext() {
   return last; // updated the LAST time you changed values
 }
 
-void parseMRMData(const std::string& fileName) {
-  FilterReading current, last; reset(current); reset(last);
+std::vector<std::vector<FilterReading>> parseMRMData(const std::string& fileName) {
+  std::vector<std::vector<FilterReading>> data; data.reserve(DATA_POINTS);
   std::string rowText, colText;
   long double firstTime = 0.0;
-  long double sum, tmpMagnitude;
-  int line = 0, elem = 0;
-  int tmpIndex, dataLength = 0;
+  unsigned int line = 0;
   for (GetLines row (fileName, &rowText); row.hasNext(); row.next()) {
     // Setup
     ++line;
-    copy(last, current);
-    reset(current);
+    FilterReading current; reset(current);
+    std::vector<FilterReading> rowVec; rowVec.reserve(ELEMENTS);
     GetElements col (rowText, &colText);
     //col.next() is implied by the constructor
 
     // Begin parsing line
-    if (isdigit(colText[0])) { // first element is always timestamp (if its a number)
+    if (isdigit(colText[0])) { // first element is always timestamp (if its first char a number)
       current.timestamp = std::stold(colText); col.next();
       if (firstTime == 0.0)
         firstTime = current.timestamp;
+      current.timestamp = current.timestamp - firstTime;
       if (colText == "MrmDetectionListInfo") { col.next();
         current.messageID = std::stoi(colText); col.next();
-        dataLength = std::stoi(colText); col.next();
-        elem = 0; sum = 0;
+        unsigned int dataLength = std::stoi(colText); col.next();
+        if (dataLength == 0)
+          continue;
         while (col.hasNext()) { // Then the rest of the line is data
-          if (elem >= dataLength) {
-            std::cerr << "Too many datapoints on " << line << "\nExpecting: "
-                      << dataLength << ", Got at least: " << elem << "\n";
-            break;
-          }
-          tmpIndex = std::stoi(colText); col.next();
-          tmpMagnitude = std::stof(colText) / 10000000.0; col.next();
-
-          sum += tmpMagnitude;
-          current.index += tmpIndex * tmpMagnitude;
-          ++elem;
+          current.index = std::stoi(colText); col.next();
+          current.magnitude = std::stof(colText) / MAX_MAGNITUDE; col.next();
+          rowVec.push_back(current);
         }
-        //if (elem != dataLength * 2) std::cerr << "not enough datapoints\n";
-        #ifdef HUMAN_READABLE
-          std::cout << readingToString(current) << " found on line: " << line << "\n";
-        #endif
-        #ifdef POSITION_AND_TIME
-          std::cout << current.timestamp - firstTime << " "
-                    << current.index / sum << " "
-                    << sum << "\n";
-        #endif
-        #ifdef DATA_CERTAINTY
-          std::cout << current.timestamp - firstTime << " "
-                    << sum << "\n";
-        #endif
-
+        if (rowVec.size() > dataLength) {
+          std::cerr << "Non fatal error: Line " << line
+                    << " has exceeded declared size. Expected " << dataLength
+                    << ", got " << rowVec.size() << "\n";
+        }
+        data.push_back(rowVec);
       }
     }
+  }
+  return data;
+}
+
+void humanReadable(std::vector<std::vector<FilterReading>> data) {
+  for (std::vector<FilterReading> row : data) {
+    std::cout << "Row: ";
+    std::cout << "Time: " << row[0].timestamp << ", ID: " << row[0].messageID;
+    for (FilterReading elem : row) {
+      std::cout << ", index: " << elem.index << ", magnitude: " << elem.magnitude;
+    }
+    std::cout << "\n";
+  }
+}
+
+void pythonReadable(std::vector<std::vector<FilterReading>> data) {
+  std::cout << "data = [\n";
+  for (std::vector<FilterReading> row : data) {
+    std::cout << "    [" << row[0].timestamp << ", ";
+    for (FilterReading elem : row) {
+      std::cout << "(" << elem.index << ", " << elem.magnitude << "), ";
+    }
+    std::cout << "],\n";
+  }
+  std::cout << "]\n";
+}
+
+void maxVal(std::vector<std::vector<FilterReading>> data) {
+  FilterReading max;
+  for (std::vector<FilterReading> row : data) {
+    reset(max);
+    max.magnitude = -1;
+    for (FilterReading elem : row) {
+      if (elem.magnitude > max.magnitude)
+        max =  elem;
+    }
+    std::cout << max.timestamp << " " << max.index << " " << max.magnitude << "\n";
+  }
+}
+
+void avgVal(std::vector<std::vector<FilterReading>> data) {
+  FilterReading sum;
+  for (std::vector<FilterReading> row : data) {
+    sum = row[0];
+    for (FilterReading elem : row) {
+      sum.index += elem.index * elem.magnitude;
+      sum.magnitude += elem.magnitude;
+    }
+    std::cout << sum.timestamp << " " << sum.index / sum.magnitude << " "
+              << sum.magnitude << "\n";
   }
 }
 

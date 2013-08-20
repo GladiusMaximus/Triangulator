@@ -9,7 +9,7 @@
 const std::string fileName = "./external/rlog_000.csv";
 
 int main() {
-  parseMRMData(fileName);
+  pythonReadable(parseMRMData(fileName));
 }
 // TODO: not enough data points
 // TODO: fscanf instead of csv iterators

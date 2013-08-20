@@ -35,11 +35,15 @@ typedef struct {
   int messageID;
   //int lastID;
   int index;
-  int magnitude;
+  float magnitude;
 } FilterReading;
 
 
-void parseMRMData(const std::string& fileName);
+std::vector<std::vector<FilterReading>> parseMRMData(const std::string& fileName);
+void humanReadable(std::vector<std::vector<FilterReading>> data);
+void pythonReadable(std::vector<std::vector<FilterReading>> data);
+void maxVal(std::vector<std::vector<FilterReading>> data);
+void avgVal(std::vector<std::vector<FilterReading>> data);
 std::string readingToString(const FilterReading &k);
 void reset(FilterReading &k);
 void copy(FilterReading& lhs, const FilterReading& rhs);
