@@ -22,6 +22,7 @@ class GetElements {
     GetElements(const std::string& text_, std::string* output_, char delim_ = ',');
     void next();
     bool hasNext();
+    void skip(unsigned int howMany);
   private:
     std::istringstream text;
     bool last;
@@ -37,12 +38,15 @@ typedef struct {
 typedef struct {
   long double timestamp;
   unsigned int messageID;
+  unsigned int lineNumber;
   std::vector<Detection> list;
-  std::vector<double> rawData;
+  std::vector<double> motion;
 } DetectionList;
 
 std::vector<DetectionList> parseMRMData(const std::string& fileName);
-void getNextToken(std::istream stream, char delim, std::string& output);
+void getMetaData(const std::string& rowText, DetectionList &line);
+void getDetectionList(const std::string& rowText, DetectionList &line);
+void getMotionData(const std::string& rowText, DetectionList &line);
 void humanReadable(std::vector<DetectionList> data);
 void pythonReadable(std::vector<DetectionList> data);
 void maxVal(std::vector<DetectionList> data);

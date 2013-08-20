@@ -44,6 +44,11 @@ void GetElements::next() {
   *output = data;
 }
 
+void GetElements::skip(unsigned int howMany) {
+  for (unsigned int i = 0; i < howMany; i++)
+    next();
+}
+
 bool GetElements::hasNext() {
   return last; // updated the LAST time you changed values
 }
@@ -52,63 +57,87 @@ bool GetElements::hasNext() {
 std::vector<DetectionList> parseMRMData(const std::string& fileName) {
   std::vector<DetectionList> data; data.reserve(DATA_POINTS);
   std::string rowText, colText;
-  long double firstTime = 0.0;
   unsigned int lineNumber = 0;
   for (GetLines row (fileName, &rowText); row.hasNext(); row.next()) {
     // Setup
     ++lineNumber;
-    DetectionList line;
+    std::string rowAboveText;
     GetElements col (rowText, &colText);
-    //col.next() is implied by the constructor
 
     // Begin parsing line
-    if (isdigit(colText[0])) { // first element is always timestamp (if its first char a number)
-      line.timestamp = std::stold(colText); col.next();
-      if (firstTime == 0.0)
-        firstTime = line.timestamp;
-      line.timestamp = line.timestamp - firstTime;
+    if (isdigit(colText[0])) {
+      DetectionList line; line.lineNumber = lineNumber;
+      col.skip(1); // throw away first element
       std::string type;
       type = colText; col.next(); // second element is always message type
-      line.messageID = std::stoi(colText); col.next(); // third element is always ID
       if (type == "MrmFullScanInfo") {
-        // skip next 8
-        col.next(); col.next(); col.next(); col.next(); col.next();
-        col.next(); col.next(); col.next(); col.next();
-        if (colText == "4") { col.next();
-          col.next(); col.next(); // skip 2
-          unsigned int dataLength = std::stoi(colText); col.next();
-          line.rawData.reserve(dataLength);
-          while (col.hasNext()) {
-            double reading = fabs(std::stod(colText)); col.next();
-            line.rawData.push_back(reading);
-          }
-          if (line.list.size() > dataLength) {
-            std::cerr << "Non fatal error: Line " << lineNumber
-                      << " has exceeded declared size. Expected " << dataLength
-                      << ", got " << line.list.size() << "\n";
-          }
-        }
+        rowAboveText = rowText;
       } else if (type == "MrmDetectionListInfo") {
-        unsigned int dataLength = std::stoi(colText); col.next();
-        if (dataLength == 0)
-          continue;
-        line.list.reserve(dataLength);
-        while (col.hasNext()) { // Then the rest of the line is data
-          Detection current;
-          current.index = std::stoi(colText); col.next();
-          current.magnitude = std::stof(colText) / MAX_MAGNITUDE; col.next();
-          line.list.push_back(current);
-        }
-        if (line.list.size() > dataLength) {
-          std::cerr << "Non fatal error: Line " << lineNumber
-                    << " has exceeded declared size. Expected " << dataLength
-                    << ", got " << line.list.size() << "\n";
-        }
+        getMetaData(rowText, line);
+        getDetectionList(rowText, line);
+        getMotionData(rowAboveText, line);
         data.push_back(line);
       }
     }
   }
   return data;
+}
+
+void getMetaData(const std::string& rowText, DetectionList &line) {
+  std::string colText;
+  GetElements col (rowText, &colText);
+  static long double firstTime = 0.0;
+
+  line.timestamp = std::stold(colText); col.next(); // first element ist imestamp
+  if (firstTime == 0.0)
+    firstTime = line.timestamp;
+  line.timestamp = line.timestamp - firstTime;
+  col.next(); // throw away second element (it is the message type)
+  line.messageID = std::stoi(colText); col.next(); // third element is always ID
+}
+
+void getDetectionList(const std::string& rowText, DetectionList &line) {
+  std::string colText;
+  GetElements col (rowText, &colText);
+  col.skip(3); // we are at where the data starts
+
+  unsigned int dataLength = std::stoi(colText); col.next();
+  if (dataLength == 0)
+    return;
+  line.list.reserve(dataLength);
+  while (col.hasNext()) { // Then the rest of the line is data
+    Detection current;
+    current.index = std::stoi(colText); col.next();
+    current.magnitude = std::stof(colText) / MAX_MAGNITUDE; col.next();
+    line.list.push_back(current);
+  }
+  if (line.list.size() > dataLength) {
+    std::cerr << "Non fatal error: Line " << line.lineNumber
+              << " has exceeded declared size. Expected " << dataLength
+              << ", got " << line.list.size() << "\n";
+  }
+}
+
+void getMotionData(const std::string& rowText, DetectionList &line) {
+  std::string colText;
+  GetElements col (rowText, &colText);
+  col.skip(3); // we are at where the data starts
+
+  col.skip(8); // this is where the REAL data starts
+  if (colText == "4") { col.next();
+    col.next(); col.next(); // skip 2
+    unsigned int dataLength = std::stoi(colText); col.next();
+    line.motion.reserve(dataLength);
+    while (col.hasNext()) {
+      double reading = fabs(std::stod(colText)); col.next();
+      line.motion.push_back(reading);
+    }
+    if (line.motion.size() > dataLength) {
+      std::cerr << "Non fatal error: Line " << line.lineNumber
+                << " has exceeded declared size. Expected " << dataLength
+                << ", got " << line.list.size() << "\n";
+    }
+  }
 }
 
 void humanReadable(std::vector<DetectionList> data) {
