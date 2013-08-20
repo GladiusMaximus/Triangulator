@@ -1,0 +1,111 @@
+#include <vector>
+#include <iostream>
+#include "file_parser.h"
+
+/******************************************************************************
+  CSV iterator
+******************************************************************************/
+
+const unsigned int MAX_MAGNITUDE = 65535;
+const unsigned int ELEMENTS = 380; // just an estimate
+const unsigned int DATA_POINTS = 140; // just an estimate
+
+std::vector<DetectionList> parseMRMData(const std::string& fileName) {
+  std::vector<DetectionList> data; data.reserve(DATA_POINTS);
+  std::ifstream file (fileName);
+  unsigned int line = 0;
+  while (file.is_open() && file.good()) {
+    std::string rowString;
+    getline(file, rowString, '\n');
+    std::istringstream row (rowString);
+    line++;
+    if (isdigit(row.peek())) { // on a line with numbers
+      DetectionList i; i.list.reserve(ELEMENTS);
+      row >> i.timestamp; row.ignore(',');
+      std::string type;
+      row >> type; row.ignore(',');
+      row >> i.messageID; row.ignore(',');
+      if (type == "MrmDetectionListInfo") {
+        unsigned int numDetections; row >> numDetections;
+        while (row.good()) {
+          Detection k;
+          row >> k.index; row.ignore(',');
+          row >> k.magnitude; // could be last thing in the line
+          i.list.push_back(k);
+        }
+        if (i.list.size() > numDetections) {
+          std::cerr << "Non fatal error: Line " << line
+                    << " has exceeded declared size. Expected " << numDetections
+                    << ", got " << i.list.size() << "\n";
+        }
+        data.push_back(i);
+      }
+    }
+  }
+  return data;
+}
+
+void humanReadable(std::vector<DetectionList> data) {
+  for (DetectionList row : data) {
+    std::cout << "Row: ";
+    std::cout << "Time: " << row.timestamp << ", ID: " << row.messageID;
+    for (Detection elem : row.list) {
+      std::cout << ", index: " << elem.index << ", magnitude: " << elem.magnitude;
+    }
+    std::cout << "\n";
+  }
+}
+
+void pythonReadable(std::vector<DetectionList> data) {
+  std::cout << "data = [\n";
+  for (DetectionList row : data) {
+    std::cout << "    [" << row.timestamp << ", ";
+    for (Detection elem : row.list) {
+      std::cout << "(" << elem.index << ", " << elem.magnitude << "), ";
+    }
+    std::cout << "],\n";
+  }
+  std::cout << "]\n";
+}
+
+void maxVal(std::vector<DetectionList> data) {
+  for (DetectionList row : data) {
+    Detection max;
+    max.magnitude = -1.0;
+    max.index = 0;
+    for (Detection elem : row.list) {
+      if (elem.magnitude > max.magnitude)
+        max =  elem;
+    }
+    std::cout << row.timestamp << " " << max.index << " " << max.magnitude << "\n";
+  }
+}
+
+void avgVal(std::vector<DetectionList> data) {
+  for (DetectionList row : data) {
+    Detection sum;
+    sum.index = 0; sum.magnitude = 0.0;
+    for (Detection elem : row.list) {
+      sum.index += elem.index * elem.magnitude;
+      sum.magnitude += elem.magnitude;
+    }
+    std::cout << row.timestamp << " " << sum.index / sum.magnitude << " "
+              << sum.magnitude << "\n";
+  }
+}
+
+/******************************************************************************
+  Auxiliary functions
+******************************************************************************/
+
+// http://www.codeproject.com/Articles/10880/A-trim-implementation-for-std-string
+void trim(std::string& str) {
+  std::string::size_type pos = str.find_last_not_of(' ');
+  if(pos != std::string::npos) {
+    str.erase(pos + 1);
+    pos = str.find_first_not_of(' ');
+    if(pos != std::string::npos) str.erase(0, pos);
+  }
+  else str.erase(str.begin(), str.end());
+}
+

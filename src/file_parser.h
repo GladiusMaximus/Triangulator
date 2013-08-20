@@ -30,23 +30,23 @@ class GetElements {
 };
 
 typedef struct {
+  unsigned int index;
+  double magnitude;
+} Detection;
+
+typedef struct {
   long double timestamp;
-  //long double timeSince;
-  int messageID;
-  //int lastID;
-  int index;
-  float magnitude;
-} FilterReading;
+  unsigned int messageID;
+  std::vector<Detection> list;
+  std::vector<double> rawData;
+} DetectionList;
 
-
-std::vector<std::vector<FilterReading>> parseMRMData(const std::string& fileName);
-void humanReadable(std::vector<std::vector<FilterReading>> data);
-void pythonReadable(std::vector<std::vector<FilterReading>> data);
-void maxVal(std::vector<std::vector<FilterReading>> data);
-void avgVal(std::vector<std::vector<FilterReading>> data);
-std::string readingToString(const FilterReading &k);
-void reset(FilterReading &k);
-void copy(FilterReading& lhs, const FilterReading& rhs);
+std::vector<DetectionList> parseMRMData(const std::string& fileName);
+void getNextToken(std::istream stream, char delim, std::string& output);
+void humanReadable(std::vector<DetectionList> data);
+void pythonReadable(std::vector<DetectionList> data);
+void maxVal(std::vector<DetectionList> data);
+void avgVal(std::vector<DetectionList> data);
 void trim(std::string& str);
 
 #endif
